@@ -1,4 +1,7 @@
 <?php
+
+namespace Hschottm\ExcelXLSBundle;
+
 	define ("XLSDATA_BYTE",     1,true);
 	define ("XLSDATA_SHORT",    2,true);
 	define ("XLSDATA_LONG",     3,true);
@@ -7,11 +10,11 @@
 	define ("XLSDATA_LSTRING",  6,true);
 	define ("XLSDATA_STRING1",  7,true);
 	define ("XLSDATA_DATA32BIT",8,true);
-	
+
 	define ("XLS_BIFF5",0x0809);
 	define ("XLS_BIFF_EOF",0x000a);
 	define ("WORKBOOK_SHEET",0x0010);
-	
+
 	define ("BIFF_WORKBOOKGLOBALS",0x0005);
 	define ("BIFF_CALCCOUNT",0x000c);
 	define ("BIFF_CALCMODE",0x000d);
@@ -65,7 +68,7 @@
 	define ("BIFF_INTERFACEHEADER",0x00e1);
 	define ("BIFF_INTERFACEEND",0x00e2);
 	define ("BIFF_MERGEDCELLS",0x00e5);
-	
+
 /*
 016FH = 367 = ASCII
 01B5H = 437 = IBM PC CP-437 (US)
@@ -106,7 +109,7 @@
 8001H = 32769 = Windows CP-1252 (Latin I) (BIFF2-BIFF3)
 */
 	define ("BIFF_CODEPAGE",0x0042);
-	
+
 	define ("BIFF_REFRESHALL",0x01b7);
 	define ("BIFF_DIMENSIONS",0x0200);
 	define ("BIFF_NUMBER",0x0203);
@@ -118,32 +121,32 @@
 	define ("BIFF_STYLEINFORMATION",0x0293);
 	define ("BIFF_FORMAT",0x041e);
 	define ("BIFF_SHEETPROTECTION",0x0867);
-	
+
 	class xls_bof {
 		var $data = null;
 		var $size = 0;
 		var $type = null;
-		
+
 		public function __construct($aboftype=-1) {
 			if ($aboftype==-1) { die("Error"); }
 			$this->data = array();
 			$this->type = $aboftype;
 		}
-		
+
 		public function append($adatatype, $adatarec) {
 			$new = array();
 			$new["type"] = $adatatype;
 			$new["data"] = $adatarec;
 			$this->data[] = $new;
 		}
-		
+
 		public function clear($aboftype=-1) {
 			if ($aboftype==-1) { die("Error"); }
 			$this->type = $aboftype;
 			$this->data = array();
 			return true;
 		}
-		
+
 		public function fetch() {
 			$output = "";
 			foreach ($this->data as $key => $datarec) {
@@ -151,7 +154,7 @@
 					case XLSDATA_BYTE :	$output .= pack("C",$datarec["data"]);
 										$this->size+=1;
 										break;
-										
+
 					case XLSDATA_SHORT:	$output .= pack("v",$datarec["data"]);
 										$this->size+=2;
 										break;
@@ -159,12 +162,12 @@
 					case XLSDATA_LONG : $output .= pack("V",$datarec["data"]);
 										$this->size+=4;
 										break;
-					
+
 					case XLSDATA_FLOAT: $output .= pack("d",$datarec["data"]);
 										$this->size+=8;
 										break;
-					
-					case XLSDATA_DATA32BIT : 
+
+					case XLSDATA_DATA32BIT :
 										$ldata = $datarec["data"];
 										$b3 = $ldata & 0xff;
 										$b2 = ($ldata >> 8) & 0xff;
@@ -173,7 +176,7 @@
 										$output .= pack("CCCC",$b0,$b1,$b2,$b3);
 										$this->size+=4;
 										break;
-					
+
 					case XLSDATA_STRING:
 										$output .= pack("C",strlen($datarec["data"]));
 										$this->size++;
@@ -182,7 +185,7 @@
 											$this->size++;
 											break;
 										}
-					
+
 					case XLSDATA_STRING1:
 										$this->size+=strlen($datarec["data"]);
 										//$output .= pack("C",$datarec["data"]);
@@ -200,7 +203,7 @@
 			}
 			return pack("vv",$this->bof,$this->size).$output;
 		}
-		
+
 		public function save($afilehd) {
 			$this->bof = $this->type;
 			$this->size = 0;
@@ -232,7 +235,7 @@
 			}
 			return true;
 		}
-		
+
 		public function workbookxfrecords($afilehd) {
 			$this->workbookonexfdata($afilehd,0x0000,0x0000,0xfff5,0x00,0x000020c0);
 			$this->workbookonexfdata($afilehd,0x0001,0x0000,0xfff5,0xf4,0x000020c0);
@@ -258,7 +261,7 @@
 			$this->workbookonexfdata($afilehd,0x0000,0x0000,0x0001,0x10,0x000020c0);
 			$this->workbookonexfdata($afilehd,0x0000,0x0000,0x0001,0x50,0x00000488);
 		}
-		
+
 		public function workbookonexfdata($afilehd, $fontindex, $formatindex, $xftype, $textorientation, $colorindexs) {
 			$this->clear(BIFF_XFRECORD);
 			$this->append(XLSDATA_SHORT,$fontindex);
@@ -282,8 +285,8 @@
 																2 Bottom
 																3 Justified (BIFF5-BIFF8)
 																4 Distributed (BIFF8, available in Excel 10.0 (Excel XP) and later only)
-															*/			
-			$this->append(XLSDATA_BYTE,$textorientation);	/* 
+															*/
+			$this->append(XLSDATA_BYTE,$textorientation);	/*
 															bits mask
 															1-0 03H XF_ORIENTATION ? Text orientation
 																0 Not rotated
@@ -302,8 +305,8 @@
 															Bit     Mask       Contents
 															6-0   0000007FH Colour index for pattern colour
 															13-7  00003F80H Colour index for pattern background
-															21-16 003F0000H Fill pattern 
-															24-22 01C00000H Bottom line style 
+															21-16 003F0000H Fill pattern
+															24-22 01C00000H Bottom line style
 															31-25 FE000000H Colour index for bottom line colour
 															*/
 			$this->append(XLSDATA_LONG,0);					/* Line styles
@@ -317,6 +320,5 @@
 															*/
 			$this->save($afilehd);
 		}
-		
+
 	}
-?>

@@ -1,15 +1,18 @@
 <?php
+
+namespace Hschottm\ExcelXLSBundle;
+
 	class xls_mergedcells {
 		var $merged_array = null;
-		
+
 		public function xls_mergedcells() {
 			$this->merged_array=array();
 		}
-		
+
 		public function merge_cells($arowfirst, $arowlast, $acolfirst, $acollast) {
 			$this->merged_array[]=array("rowfirst" => $arowfirst, "rowlast" => $arowlast, "colfirst" => $acolfirst, "collast" => $acollast);
 		}
-		
+
 		public function findpos($arow,$acol) {
 			foreach ($this->merged_array as $key => $data) {
 				if ((($arow>=$data["rowfirst"]) && ($arow<=$data["rowlast"])) && (($acol>=$data["colfirst"]) && ($acol<=$data["collast"]))) {
@@ -18,7 +21,7 @@
 			}
 			return false;
 		}
-		
+
 		public function save($filehandle,$xls_biffobject) {
 			$xls_biffobject->clear(BIFF_MERGEDCELLS);
 			$xls_biffobject->append(XLSDATA_SHORT,count($this->merged_array));
@@ -31,4 +34,3 @@
 			$xls_biffobject->save($filehandle);
 		}
 	}
-?>

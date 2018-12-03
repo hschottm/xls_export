@@ -1,14 +1,17 @@
 <?php
+
+namespace Hschottm\ExcelXLSBundle;
+
 	class fat_class {
 		var $streamsize = null;
 		var $rootstorageoffset = null;
 		var $fatchain = array();
 		var $fatsectorcount = null;
-		
+
 		public function __construct($afilehd, $astreamsize, $arootstorageoffset) {
 			$this->streamsize = $astreamsize;
 			$this->rootstorageoffset = $arootstorageoffset;
-			
+
 			if ($this->streamsize>=0x1000) {
 				$streamsectors = $this->streamsize >> 9;
 				$streamsectors += (($this->streamsize & 0x1ff)>0 ? 1 : 0);
@@ -28,7 +31,7 @@
 			}
 			$this->fatchain[] = 0xfffffffe;							// minifat , used one sector
 			$this->fatchain[] = 0xfffffffe;							// directory , used one sector
-			
+
 			$fatsize1 = (count($this->fatchain) >> 7) + (((count($this->fatchain) & 0x7f)>0) ? 1 : 0);
 			$fatsize0 = $fatsize1;
 			while ($fatsize1) {
@@ -40,7 +43,7 @@
 			$reqbytes = 128-(count($this->fatchain) & 0x7f);
 			$fatfill = array_fill(count($this->fatchain),$reqbytes,0xffffffff);
 			$this->fatchain = array_merge($this->fatchain,$fatfill);
-			
+
 			$output = "";
 			$count = 0;
 			foreach ($this->fatchain as $key => $sectorid) {
@@ -50,4 +53,3 @@
 			fwrite($afilehd,$output,$count);
 		}
 	}
-?>

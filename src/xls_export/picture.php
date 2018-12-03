@@ -1,5 +1,8 @@
 <?php
-	/* 
+
+namespace Hschottm\ExcelXLSBundle;
+
+	/*
 offs  size  data        		content
 ---------------------------------------
 0000 , 02 : 5d 00 				biff type, Object
@@ -56,7 +59,7 @@ offs  size  data        		content
 									bit3..15 : unused, must be zero ...
 003c , 04 : 00 00 00 00 		reserved
 0040 , 01 : 05 					length of the name
-0041 , nn : 4b e9 70 20 31 		name ,maybe contain a padding byte to force word boundary allignment (=Kép 1)
+0041 , nn : 4b e9 70 20 31 		name ,maybe contain a padding byte to force word boundary allignment (=Kï¿½p 1)
 
 0000 , 02 : 7f 00 				biff type, ImageData
 0002 , 02 : 44 00 				record length
@@ -64,15 +67,15 @@ offs  size  data        		content
 0006 , 02 : 01 00 				enviroment from which file was written, 1= windows
 0008 , 04 : 3c 00 00 00 		image data length
 000a ....							image data
-			
-			0c 00 00 00 04 00 04 00 01 00 18 00 
-			ff 00 00 ff ff ff ff ff ff 00 00 00 
-			ff ff ff ff 00 00 00 00 00 ff ff ff 
-			ff ff ff 00 00 ff 00 ff 00 ff ff ff 
+
+			0c 00 00 00 04 00 04 00 01 00 18 00
+			ff 00 00 ff ff ff ff ff ff 00 00 00
+			ff ff ff ff 00 00 00 00 00 ff ff ff
+			ff ff ff 00 00 ff 00 ff 00 ff ff ff
 			00 00 ff ff ff ff ff ff ff 00 ff 00
-	
+
 	*/
-	
+
 	class xls_picture {
 		var $picture_array = null;
 		var $filename = null;
@@ -88,15 +91,15 @@ offs  size  data        		content
 		var $imagebottom = null;
 		var $imagewidth = null;
 		var $imageheight = null;
-		
+
 		function xls_picture($afilename, $abgcolor, $afgcolor, $abgcolorrgb, $aobjectid, $arow, $acol) {
 			$this->picture_array = array();
 			$this->filename = $afilename;
-			
+
 			$tmp = explode(".",$afilename);
 			if (count($tmp)<2) { die("missing filename extension."); }
 			if (!file_exists($afilename)) { die("file does not exist."); }
-			
+
 			$this->bgcolor = $abgcolor;
 			$this->bgcolorrgb = $abgcolorrgb;
 			$this->fgcolor = $afgcolor;
@@ -104,7 +107,7 @@ offs  size  data        		content
 			$this->firstrow = $arow;
 			$this->firstcol = $acol;
 		}
-		
+
 		function scanimgline($imagehd, $line, $width, $bgcolor) {
 			for ($x=0; $x!=$width; $x++) {
 				$colorindex = imagecolorat($imagehd, $x, $line);
@@ -113,7 +116,7 @@ offs  size  data        		content
 					$dstR = $bgcolor >> 16 & 0xFF;
 					$dstG = $bgcolor >> 8 & 0xFF;
 					$dstB = $bgcolor & 0xFF;
-				
+
 					$rgb["red"]   = (($rgb["red"]   * (0xFF-$rgb["alpha"])) >> 8) + (($dstR * $rgb["alpha"]) >> 8);
 					$rgb["green"] = (($rgb["green"] * (0xFF-$rgb["alpha"])) >> 8) + (($dstG * $rgb["alpha"]) >> 8);
 					$rgb["blue"]  = (($rgb["blue"]  * (0xFF-$rgb["alpha"])) >> 8) + (($dstB * $rgb["alpha"]) >> 8);
@@ -135,7 +138,7 @@ offs  size  data        		content
 				}
 			}
 		}
-		
+
 		function loaddata() {
 			$tmp = explode(".",$this->filename);
 			$ext = strtolower($tmp[count($tmp)-1]);
@@ -165,7 +168,7 @@ offs  size  data        		content
 			}
 			imagedestroy($img);
 		}
-		
+
 		function save($filehandle,$xls_biffobject) {
 			$xls_biffobject->clear(BIFF_OBJECT);
 			$xls_biffobject->append(XLSDATA_LONG,1);					// one object
@@ -181,11 +184,11 @@ offs  size  data        		content
 			$xls_biffobject->append(XLSDATA_SHORT,$this->lastrow);
 			$xls_biffobject->append(XLSDATA_SHORT,$this->imagebottom);
 			$xls_biffobject->append(XLSDATA_SHORT,0);
-			
+
 			$xls_biffobject->append(XLSDATA_SHORT,0);
 			$xls_biffobject->append(XLSDATA_SHORT,0x0005);
 			$xls_biffobject->append(XLSDATA_SHORT,0);
-			
+
 			$xls_biffobject->append(XLSDATA_BYTE,$this->bgcolor);
 			$xls_biffobject->append(XLSDATA_BYTE,$this->fgcolor);
 			$xls_biffobject->append(XLSDATA_BYTE,0);
@@ -202,16 +205,16 @@ offs  size  data        		content
 			$xls_biffobject->append(XLSDATA_SHORT,0);
 			$xls_biffobject->append(XLSDATA_SHORT,0x0001);
 			$xls_biffobject->append(XLSDATA_LONG,0x0000);
-			
+
 			$s = "Picture".$this->objectid;
 			$xls_biffobject->append(XLSDATA_STRING,$s);
 			$xls_biffobject->save($filehandle);
-			
+
 			$xls_biffobject->clear(BIFF_IMAGEDATA);
 			$xls_biffobject->append(XLSDATA_SHORT,0x0009);
 			$xls_biffobject->append(XLSDATA_SHORT,0x0001);
 			$xls_biffobject->append(XLSDATA_LONG,count($this->picture_array)+12);
-			
+
 			if (defined("PICTUREDEBUG")) {
 				echo "picture size : ".count($this->picture_array)." (".dechex(count($this->picture_array)).")<br>\n";
 			}
@@ -220,11 +223,10 @@ offs  size  data        		content
 			$xls_biffobject->append(XLSDATA_SHORT,$this->imageheight);
 			$xls_biffobject->append(XLSDATA_SHORT,1);
 			$xls_biffobject->append(XLSDATA_SHORT,24);
-			
+
 			foreach ($this->picture_array as $data) {
 				$xls_biffobject->append(XLSDATA_BYTE,$data);
 			}
 			$xls_biffobject->save($filehandle);
 		}
 	}
-?>

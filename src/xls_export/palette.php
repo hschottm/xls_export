@@ -1,4 +1,7 @@
 <?php
+
+namespace Hschottm\ExcelXLSBundle;
+
 	class xls_palette {
 		var $htmlcolorarray = array("aliceblue" => "#f0f8ff",
 									"antiquewhite" => "#faebd7",
@@ -147,7 +150,7 @@
 									"whitesmoke" => "#f5f5f5",
 									"yellow" => "#ffff00",
 									"yellowgreen" => "#9acd32");
-		
+
 		var	$palette_array = array(	0x000000,
 									0xffffff,
 									0xff0000,
@@ -227,19 +230,19 @@
 				return $this->findcolor($red,$green,$blue);
 			}
 		}
-		
+
 		public function findnamedcolor($colorname) {
 			if (!isset($this->htmlcolorarray[strtolower($colorname)])) { die("unknown color name."); }
 			return $this->findhtmlcolor($this->htmlcolorarray[strtolower($colorname)]);
 		}
-		
+
 		public function findhtmlcolor($htmlcolor) {
 			$red = hexdec(substr($htmlcolor,1,2));
 			$green = hexdec(substr($htmlcolor,3,2));
 			$blue = hexdec(substr($htmlcolor,5,2));
 			return $this->findcolor($red,$green,$blue);
 		}
-		
+
 		public function findcolor($ared,$agreen,$ablue) {
 			$rgbval = 0;
 			$rgbval = ($ared<<16) | ($agreen << 8) | ($ablue << 0);
@@ -254,7 +257,7 @@
 			$colorindex += 8;
 			return $colorindex;
 		}
-		
+
 		public function change_color($idx,$color) {
 			$oldidx = $this->getcoloridx($color);
 			if ($oldidx!==false) { return $oldidx; }
@@ -280,7 +283,7 @@
 			}
 			return $idx;
 		}
-		
+
 		public function save($filehandle,$xls_biffobject) {
 			$xls_biffobject->clear(BIFF_PALETTE);
 			$xls_biffobject->append(XLSDATA_SHORT,count($this->palette_array));
@@ -291,4 +294,3 @@
 			$xls_biffobject->save($filehandle);
 		}
 	}
-?>

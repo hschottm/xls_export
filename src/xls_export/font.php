@@ -1,30 +1,33 @@
 <?php
-	define ("XLSFONT_NORMAL",0x0190);
+
+namespace Hschottm\ExcelXLSBundle;
+
+  define ("XLSFONT_NORMAL",0x0190);
 	define ("XLSFONT_BOLD",0x02bc);
-	
+
 	define ("XLSFONT_ESCAPE_NONE",0x0000);
 	define ("XLSFONT_ESCAPE_SUPERSCRIPT",0x0001);
 	define ("XLSFONT_ESCAPE_SUBSCRIPT",0x0002);
-	
+
 	define ("XLSFONT_UNDERLINE_NONE",0x00);
 	define ("XLSFONT_UNDERLINE_SINGLE",0x01);
 	define ("XLSFONT_UNDERLINE_DOUBLE",0x02);
 	define ("XLSFONT_UNDERLINE_SINGLEACC",0x21);
 	define ("XLSFONT_UNDERLINE_DOUBLEACC",0x22);
-	
+
 	define ("XLSFONT_FAMILY_NORMAL",0x00);
 	define ("XLSFONT_FAMILY_ROMAN",0x01);
 	define ("XLSFONT_FAMILY_SWISS",0x02);
 	define ("XLSFONT_FAMILY_MODERN",0x03);
 	define ("XLSFONT_FAMILY_SCRIPT",0x04);
 	define ("XLSFONT_FAMILY_DECORATIVE",0x05);
-	
+
 	define ("XLSFONT_STYLE_ITALIC",0x0002);
 	define ("XLSFONT_STYLE_STRIKEOUT",0x0008);
 	define ("XLSFONT_STYLE_OUTLINED",0x0010);
 	define ("XLSFONT_STYLE_SHADOWED",0x0020);
 	define ("XLSFONT_STYLE_CONDENSED",0x0040);
-	
+
 	define ("XLSFONT_CHARACTERSET_LATIN",0x00);
 	define ("XLSFONT_CHARACTERSET_SYSTEMDEFAULT",0x01);
 	define ("XLSFONT_CHARACTERSET_SYMBOL",0x02);
@@ -44,15 +47,15 @@
 	define ("XLSFONT_CHARACTERSET_THAI",0xde);
 	define ("XLSFONT_CHARACTERSET_LATIN2",0xee);		// central european
 	define ("XLSFONT_CHARACTERSET_LATIN1",0xff);
-	
+
 	class xls_font {
 		var $font_array = null;
-		
+
 		public function xls_font() {		// constructor
 			$this->font_array = array();
 			$this->append(null);
 		}
-		
+
 		public function append($params) {
 			$font["name"] = (isset($params["name"]) ? $params["name"] : XLSFILE_DEFAULT_FONTNAME);
 			$font["height"] = (isset($params["height"]) ? $params["height"]*20 : XLSFILE_DEFAULT_FONTHEIGHT);
@@ -76,7 +79,7 @@
 			$fontidx += (($fontidx==4) ? 1 : 0);
 			return $fontidx;
 		}
-		
+
 		public function save($filehandle,$xls_biffobject) {
 			$font0 = unserialize($this->font_array[0]);
 			$xls_biffobject->clear(BIFF_FONT);
@@ -87,7 +90,7 @@
 			$xls_biffobject->append(XLSDATA_SHORT,$font0["escapement"]);
 			$xls_biffobject->append(XLSDATA_BYTE,$font0["underline"]);
 			$xls_biffobject->append(XLSDATA_BYTE,$font0["family"]);
-			$xls_biffobject->append(XLSDATA_BYTE,$font0["characterset"]);		
+			$xls_biffobject->append(XLSDATA_BYTE,$font0["characterset"]);
 			$xls_biffobject->append(XLSDATA_BYTE,0x0000);
 			$xls_biffobject->append(XLSDATA_STRING,$font0["name"]);
 			$repeatdefault = 4;
@@ -106,12 +109,11 @@
 				$xls_biffobject->append(XLSDATA_SHORT,$font0["escapement"]);
 				$xls_biffobject->append(XLSDATA_BYTE,$font0["underline"]);
 				$xls_biffobject->append(XLSDATA_BYTE,$font0["family"]);
-				$xls_biffobject->append(XLSDATA_BYTE,$font0["characterset"]);		
-				$xls_biffobject->append(XLSDATA_BYTE,0x0000);		
+				$xls_biffobject->append(XLSDATA_BYTE,$font0["characterset"]);
+				$xls_biffobject->append(XLSDATA_BYTE,0x0000);
 				$xls_biffobject->append(XLSDATA_STRING,$font0["name"]);
 				$xls_biffobject->save($filehandle);
 				$i++;
 			}
 		}
 	}
-?>
