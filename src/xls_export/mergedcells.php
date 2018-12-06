@@ -1,5 +1,7 @@
 <?php
 
+namespace Hschottm\ExcelXLSBundle;
+
 	class xls_mergedcells {
 		var $merged_array = null;
 

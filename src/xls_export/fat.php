@@ -1,5 +1,7 @@
 <?php
 
+namespace Hschottm\ExcelXLSBundle;
+
 	class fat_class {
 		var $streamsize = null;
 		var $rootstorageoffset = null;

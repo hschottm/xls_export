@@ -1,5 +1,7 @@
 <?php
 
+namespace Hschottm\ExcelXLSBundle;
+
 	define ("XLSDATA_BYTE",     1,true);
 	define ("XLSDATA_SHORT",    2,true);
 	define ("XLSDATA_LONG",     3,true);

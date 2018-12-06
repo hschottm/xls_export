@@ -1,6 +1,8 @@
 <?php
 
-class xls_palette {
+namespace Hschottm\ExcelXLSBundle;
+
+	class xls_palette {
 		var $htmlcolorarray = array("aliceblue" => "#f0f8ff",
 									"antiquewhite" => "#faebd7",
 									"aqua" => "#00ffff",

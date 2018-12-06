@@ -1,5 +1,7 @@
 <?php
 
+namespace Hschottm\ExcelXLSBundle;
+
 	define ("XLSXF_TYPE_PROT_CELLLOCKED",    0x01);
 	define ("XLSXF_TYPE_PROT_FORMULAHIDDEN", 0x02);
 	define ("XLSXF_TYPE_PROT_STYLEXF",       0x04);

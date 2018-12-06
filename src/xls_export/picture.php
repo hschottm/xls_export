@@ -1,5 +1,7 @@
 <?php
 
+namespace Hschottm\ExcelXLSBundle;
+
 	/*
 offs  size  data        		content
 ---------------------------------------
