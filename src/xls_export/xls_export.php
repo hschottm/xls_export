@@ -1,14 +1,12 @@
 <?php
 
-namespace Hschottm\ExcelXLSBundle;
-
-use Hschottm\ExcelXLSBundle\fat_class;
-use Hschottm\ExcelXLSBundle\xls_bof;
-use Hschottm\ExcelXLSBundle\xls_palette;
-use Hschottm\ExcelXLSBundle\xls_font;
-use Hschottm\ExcelXLSBundle\xls_xf;
-use Hschottm\ExcelXLSBundle\xls_picture;
-use Hschottm\ExcelXLSBundle\xls_mergedcells;
+use fat_class;
+use xls_bof;
+use xls_palette;
+use xls_font;
+use xls_xf;
+use xls_picture;
+use xls_mergedcells;
 
 	define("CELL_STRING",1);
 	define("CELL_FLOAT",2);

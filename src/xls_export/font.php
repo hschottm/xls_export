@@ -1,7 +1,5 @@
 <?php
 
-namespace Hschottm\ExcelXLSBundle;
-
   define ("XLSFONT_NORMAL",0x0190);
 	define ("XLSFONT_BOLD",0x02bc);
 
