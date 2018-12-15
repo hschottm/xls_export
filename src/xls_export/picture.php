@@ -92,7 +92,7 @@ offs  size  data        		content
 		var $imagewidth = null;
 		var $imageheight = null;
 
-		function xls_picture($afilename, $abgcolor, $afgcolor, $abgcolorrgb, $aobjectid, $arow, $acol) {
+		public function __construct($afilename, $abgcolor, $afgcolor, $abgcolorrgb, $aobjectid, $arow, $acol) {
 			$this->picture_array = array();
 			$this->filename = $afilename;
 

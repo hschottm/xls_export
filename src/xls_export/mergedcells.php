@@ -5,7 +5,7 @@ namespace Hschottm\ExcelXLSBundle;
 	class xls_mergedcells {
 		var $merged_array = null;
 
-		public function xls_mergedcells() {
+		public function __construct() {
 			$this->merged_array=array();
 		}
 

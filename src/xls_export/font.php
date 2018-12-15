@@ -51,7 +51,7 @@ namespace Hschottm\ExcelXLSBundle;
 	class xls_font {
 		var $font_array = null;
 
-		public function xls_font() {		// constructor
+		public function __construct() {		// constructor
 			$this->font_array = array();
 			$this->append(null);
 		}
@@ -66,10 +66,12 @@ namespace Hschottm\ExcelXLSBundle;
 			$font["family"] = (isset($params["family"]) ? $params["family"] : XLSFONT_FAMILY_NORMAL);
 			$font["style"] = (isset($params["style"]) ? $params["style"] : 0x0000);
 			$font["characterset"] = XLSFILE_CHARACTERSET;
+
 			$s = serialize($font);
 			unset($font);
 			$fontidx = array_search($s,$this->font_array);
-			if ($fontidx===false) {
+
+			if ($fontidx === false) {
 				$this->font_array[] = $s;
 				$fontidx = array_search($s,$this->font_array);
 			}

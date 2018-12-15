@@ -61,7 +61,7 @@ namespace Hschottm\ExcelXLSBundle;
 		var	$xf_array = null;
 		var $defaultxf = null;
 
-		public function xls_xf() {
+		public function __construct() {
 			$this->xf_array = array();
 			$this->append(array("forced"=>1, "parentxfindex" => 0xffffff, "xftype" => XLSXF_TYPE_PROT_STYLEXF));
 			$this->append(array("forced"=>1, "parentxfindex" => 0xffffff, "xftype" => XLSXF_TYPE_PROT_STYLEXF, "flagsforce" => 0xf4, "fontindex" => 1));

@@ -77,8 +77,8 @@ use Hschottm\ExcelXLSBundle\xls_mergedcells;
 			$this->xlsdocument = array();
 			$this->xls_bof = new xls_bof(0);
 			$this->palette = new xls_palette();
-			$this->font = new xls_font(0);
-			$this->xf = new xls_xf(0);
+			$this->font = new xls_font();
+			$this->xf = new xls_xf();
 		}
 
 		public function addworksheet($sheetname) {
@@ -226,7 +226,7 @@ use Hschottm\ExcelXLSBundle\xls_mergedcells;
 						echo "fontindex : $fontindex\n";
 					}
 				}
-				if ($fontindex!=0) {
+        if ($fontindex!=0) {
 					$xfrec["fontindex"] = $fontindex;
 				}
 				$xfindex = $this->xf->append($xfrec);
